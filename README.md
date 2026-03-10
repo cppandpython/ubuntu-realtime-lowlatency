@@ -1932,6 +1932,60 @@ sudo systemctl restart systemd-journald
 <br><br>
 
 
+## GAMEMODE
+
+```bash
+# 1
+
+
+sudo apt update && sudo apt install gamemode
+
+
+# 2
+# /etc/gamemode.ini
+
+
+[general]
+# Frequency of checking for terminated processes
+reaper_freq             = 5
+
+# Governors (matching your TLP and thermald configs)
+desiredgov              = performance
+defaultgov              = powersave
+
+# Soft real-time scheduling for game threads
+softrealtime            = on
+
+# Priority level: -10 ensures the game gets CPU time over background tasks
+renice                  = -10
+inhibit_screensaver     = 1
+
+# Reduces micro-stutters caused by memory locking (crucial for modern kernels)
+disable_splitlock       = 1
+
+
+[cpu]
+# Do not let cores sleep during gaming to avoid wake-up latency
+park_cores              = no
+# Pin games to physical cores to maximize L3 cache hits
+pin_cores               = yes
+
+
+[gpu]
+# Required to unlock NVIDIA performance modes
+apply_gpu_optimisations = accept-responsibility
+# 1 = Prefer Maximum Performance (disables aggressive downclocking)
+nv_powermizer_mode      = 1
+
+[logging]
+verbose                 = false
+logfile                 = /dev/null
+```
+
+
+<br><br>
+
+
 ## PACKAGES
 
 ```bash
