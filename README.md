@@ -1,5 +1,5 @@
 # 🌟 ubuntu-realtime-lowlatency
-
+# доделываю
 
 <br>
 
@@ -424,3 +424,9 @@ gsettings set org.gnome.desktop.peripherals.mouse speed 0
 gsettings set org.gnome.desktop.peripherals.keyboard delay 300
 gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 ```
+
+
+<br>
+
+
+
