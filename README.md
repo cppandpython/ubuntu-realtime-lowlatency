@@ -457,7 +457,7 @@ __GL_GPU_THREAD_PRIORITY=HIGH
 __GL_LOG_VERBOSE=0
 __GL_DEBUG_LEVEL=0
 __GL_SHADER_DISK_CACHE=1
-__GL_SHADER_DISK_CACHE_PATH="/home/vladislav_khudash/.nvidia-shader-cache"
+__GL_SHADER_DISK_CACHE_PATH="/home/{YOUR USER}/.nvidia-shader-cache"
 __GL_SHADER_DISK_CACHE_COMPRESS=1
 
 
@@ -466,7 +466,7 @@ MESA_DEBUG=0
 MESA_NO_ERROR=1
 MESA_GLSL_CACHE_DISABLE=0
 MESA_GLTHREAD=1
-MESA_SHADER_CACHE_DIR="/home/vladislav_khudash/.mesa_shader_cache"
+MESA_SHADER_CACHE_DIR="/home/{YOUR USER}/.mesa_shader_cache"
 VK_DRIVER_FRAMETIME_ENABLE=0
 vulkan_enable_validation=0
 VK_SHADER_CACHE_DISABLE=0
@@ -485,7 +485,7 @@ EGL_PLATFORM=wayland
 DXVK_LOG_LEVEL=none
 DXVK_ASYNC=1
 DXVK_STATE_CACHE=1
-DXVK_SHADER_DISK_CACHE_PATH="/home/vladislav_khudash/.dxvk-cache"
+DXVK_SHADER_DISK_CACHE_PATH="/home/{YOUR USER}/.dxvk-cache"
 VDPAU_LOG_LEVEL=0
 LIBVA_MESSAGING_LEVEL=0
 CUDA_CACHE_PATH="/home/vladislav_khudash/.cuda-cache"
