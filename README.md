@@ -5,11 +5,13 @@
 
 <br><br>
 
+
 ## BY (Vladislav Khudash) AGE (17) FROM (UKRAINE 🇺🇦) 
 
 <br>
 
 ## I USE THIS CONFIGURATION ON MY LAPTOP (LOQ-15IAX9)
+
 
 <br><br>
 
@@ -1531,7 +1533,174 @@ systemctl --user restart pipewire.service pipewire-pulse.service wireplumber.ser
 ## PULSE
 
 ```bash
+# 1
+# /etc/pulse/daemon.conf
 
+
+high-priority = yes
+nice-level = 0
+realtime-scheduling = yes
+realtime-priority = 5
+exit-idle-time = 20
+resample-method = speex-float-10
+avoid-resampling = yes
+enable-remixing = no
+default-sample-format = s32le
+default-sample-rate = 48000
+alternate-sample-rate = 44100
+default-sample-channels = 2
+default-channel-map = front-left,front-right
+default-fragments = 8
+default-fragment-size-msec = 64
+flat-volumes = no
+enable-deferred-volume = yes
+deferred-volume-safety-margin-usec = 1000
+log-target = null
+```
+
+
+<br><br>
+
+
+# DXVK
+
+```bash
+# 1
+# /home/{YOUR USER}/.config/dxvk/dxvk.conf
+
+
+# --- DXGI (Latency & Display) ---
+dxgi.maxFrameLatency = 1
+dxgi.syncInterval = 0
+dxgi.numBackBuffers = 3
+dxgi.tearFree = auto
+dxgi.hardwareCursor = True
+dxgi.deferSurfaceRelease = True
+dxgi.nvapiHack = False
+dxgi.enableHDR = False
+dxgi.maxDeviceMemory = 6144
+
+
+# --- D3D11 (Performance & Precision) ---
+d3d11.dcSingleUseMode = auto
+d3d11.relaxedBarriers = True
+d3d11.allowMapFlagNoWait = True
+d3d11.strictDivision = False
+d3d11.samplerAnisotropy = 8
+d3d11.maxTessFactor = 12
+d3d11.maxAvailableMemory = 6144
+d3d11.disableTearing = auto
+d3d11.invariantPosition = True
+
+
+# --- D3D9 (Legacy & Compatibility) ---
+d3d9.presentInterval = 0
+d3d9.maxFrameLatency = 1
+d3d9.evictManagedOnUnlock = auto
+d3d9.supportDFFormats = True
+d3d9.supportX4R4G4B4 = True
+d3d9.supportD32 = True
+d3d9.allowDoNotWait = True
+d3d9.longMad = False
+d3d9.customVendorId = 10DE
+d3d9.customDeviceId = 1E84
+d3d9.maxAvailableMemory = 3072
+
+
+# --- Shader Cache (No Stutters) ---
+dxvk.shaderCache = True
+dxvk.shaderCachePath = /home/vladislav_khudash/.dxvk-cache
+# Ускоряем компиляцию шейдеров в фоне
+dxvk.numCompilerThreads = 6
+
+
+# --- Stealth (No Logs / No HUD) ---
+d3d9.hud = 0
+d3d11.hud = 0
+dxgi.hud = 0
+d3d9.debug = False
+d3d11.debug = False
+dxgi.debug = False
+d3d11.apitraceMode = False
+```
+
+
+<br><br>
+
+
+# VKBASALT
+
+```bash
+# 1
+
+
+sudo apt update && sudo apt install vkbasalt
+
+
+
+
+# 2
+# /home/{USER}/.config/vkBasalt
+
+
+
+
+[general]
+enable = true
+output_resolution = 0 0       
+
+
+[Clarity]
+enabled = true
+strength = 0.7               
+
+
+[LUT]
+enabled = true
+lut_path = /home/{YOUR USER}/.config/vkBasalt/luts/lut.cube
+intensity = 0.6                 
+
+
+[Vibrance]
+enabled = true
+amount = 0.25                   
+
+
+[SMAA]
+enabled = true
+smaa_type = SMAA_1X
+SMAA_THRESHOLD = 0.05
+SMAA_MAX_SEARCH_STEPS = 32        
+
+
+[CAS]
+enabled = true
+sharpness = 0.4
+
+
+[FXAA]
+enabled = false                
+
+
+[Sharpen]
+enabled = false             
+
+
+[Tonemap]
+enabled = false                
+
+
+[Denoise]
+enabled = false
+
+
+
+
+# 3
+# /home/{YOUR USER}/.config/vkBasalt/luts/lut.cube
+
+
+Download LUTs from the Internet
 ```
 
 
