@@ -126,7 +126,7 @@
 <br><br>
 
 
-## BAT
+## BAT CONSERVATION MODE
 
 ```bash
 # 1
@@ -1089,7 +1089,7 @@ PLATFORM_PROFILE_ON_BAT             = balanced
 <br><br>
 
 
-##
+## ZRAMSWAP
 
 ```bash
 # 1
@@ -1163,7 +1163,382 @@ debug = false
 <br><br>
 
 
-## d
+## NETWORKMANAGER
+
+```bash
+# 1
+# /etc/NetworkManager/NetworkManager.conf
+
+
+[main]
+plugins=ifupdown,keyfile
+connectivity-check=no
+
+
+[ifupdown]
+managed=false
+
+
+[device]
+wifi.scan-rand-mac-address=yes
+wifi.powersave=3
+
+
+[connection]
+wifi.cloned-mac-address=random
+ethernet.cloned-mac-address=random
+ipv4.dhcp-timeout=10
+
+
+
+
+# 2
+
+
+sudo systemctl restart NetworkManager
+```
+
+
+<br><br>
+
+
+## PIPEWIRE
+
+```bash
+# 1
+
+
+sudo update && sudo apt install pipewire
+
+
+
+
+# 2
+# /home/{YOUR USER}/.config/pipewire/pipewire.conf
+
+
+context.properties = {
+    core.daemon                 = true
+    core.name                   = pipewire-0
+    default.clock.rate          = 48000
+    default.clock.allowed-rates = [48000]
+    default.clock.quantum       = 512
+    default.clock.min-quantum   = 512
+    default.clock.max-quantum   = 1024
+    default.clock.quantum-limit = 8192
+    link.max-buffers            = 32
+    module.x11.bell             = true
+    module.access               = true
+    module.jackdbus-detect      = true
+    vm.overrides                = { default.clock.min-quantum = 512 }
+}
+
+context.spa-libs = {
+    audio.convert.* = audioconvert/libspa-audioconvert
+    avb.*           = avb/libspa-avb
+    api.alsa.*      = alsa/libspa-alsa
+    api.v4l2.*      = v4l2/libspa-v4l2
+    api.libcamera.* = libcamera/libspa-libcamera
+    api.bluez5.*    = bluez5/libspa-bluez5
+    api.vulkan.*    = vulkan/libspa-vulkan
+    api.jack.*      = jack/libspa-jack
+    support.*       = support/libspa-support
+}
+
+context.modules = [
+    { name = libpipewire-module-rt args = { nice.level = -2 rt.prio = 50 } flags = [ ifexists nofail ] }
+    { name = libpipewire-module-protocol-native }
+    { name = libpipewire-module-profiler }
+    { name = libpipewire-module-metadata }
+    { name = libpipewire-module-spa-device-factory }
+    { name = libpipewire-module-spa-node-factory }
+    { name = libpipewire-module-client-node }
+    { name = libpipewire-module-client-device }
+    { name = libpipewire-module-portal flags = [ ifexists nofail ] }
+    { name = libpipewire-module-access condition = [ { module.access = true } ] }
+    { name = libpipewire-module-adapter }
+    { name = libpipewire-module-link-factory }
+    { name = libpipewire-module-session-manager }
+    { name = libpipewire-module-x11-bell flags = [ ifexists nofail ] condition = [ { module.x11.bell = true } ] }
+    { name = libpipewire-module-jackdbus-detect flags = [ ifexists nofail ] condition = [ { module.jackdbus-detect = true } ] }
+]
+
+context.objects = [
+    { factory = spa-node-factory
+      args = {
+          factory.name            = api.alsa.pcm.sink
+          node.name               = HighQuality-Sink
+          node.description        = "ALSA Output"
+          audio.format            = "S32LE"
+          audio.rate              = 48000
+          audio.channels          = 2
+          resample.quality        = 10
+          channelmix.normalize    = false
+          channelmix.upmix        = false
+          channelmix.upmix-method = psd
+          node.latency            = 512/48000
+      }
+    }
+    { factory = spa-node-factory
+      args = {
+          factory.name     = api.alsa.pcm.source
+          node.name        = HighQuality-Source
+          node.description = "ALSA Input"
+          audio.format     = "S32LE"
+          audio.rate       = 48000
+          audio.channels   = 2
+          resample.quality = 10
+          node.latency     = 512/48000
+      }
+    }
+]
+
+alsa.properties = {
+    alsa.access        = [ MMAP_INTERLEAVED MMAP_NONINTERLEAVED ]
+    alsa.format        = [ "S32LE" "F32LE" ]
+    alsa.rate          = { min=48000 max=48000 }
+    alsa.channels      = { min=2 max=2 }
+    alsa.period-bytes  = { min=1024 max=65536 }
+    alsa.buffer-bytes  = { min=8192 max=131072 }
+	alsa.volume-method = "physical"
+}
+
+context.exec = []
+
+pulse.cmd = [
+    { cmd = "load-module" args = "module-always-sink" flags = [] }
+]
+
+stream.properties = {
+    node.latency   = 512/48000
+	dither.method  = "shibata"
+}
+
+pulse.properties = {
+    server.address = ["unix:native"]
+    vm.overrides   = { pulse.min.quantum = 512/48000 }
+}
+
+pulse.rules = [
+    { matches = [] actions = {} }
+]
+
+
+
+
+# 3
+# /home/{YOUR USER}/.config/pipewire/pipewire-pulse.conf
+
+
+context.properties = {
+    default.clock.rate          = 48000
+    default.clock.quantum       = 512
+    default.clock.min-quantum   = 512
+    default.clock.max-quantum   = 1024
+    default.clock.quantum-limit = 8192
+}
+
+context.spa-libs = {
+    audio.convert.* = audioconvert/libspa-audioconvert
+    support.*       = support/libspa-support
+}
+
+context.modules = [
+    { name = libpipewire-module-rt args = { nice.level = -2 } flags = [ ifexists nofail ] }
+    { name = libpipewire-module-protocol-native }
+    { name = libpipewire-module-client-node }
+    { name = libpipewire-module-adapter }
+    { name = libpipewire-module-metadata }
+    { name = libpipewire-module-protocol-pulse }
+]
+
+context.exec = []
+
+pulse.cmd = [
+    { cmd = "load-module" args = "module-always-sink" flags = [] }
+]
+
+stream.properties = {
+    node.latency            = 512/48000
+    resample.quality        = 10
+    channelmix.normalize    = false
+    channelmix.upmix        = false
+    channelmix.upmix-method = psd
+    audio.format            = "S32LE"
+	dither.method           = "shibata"
+}
+
+pulse.properties = {
+    server.address       = ["unix:native"]
+    pulse.default.format = "S32LE"
+    vm.overrides         = { pulse.min.quantum = 512/48000 }
+}
+
+pulse.rules = [
+    { matches = [] actions = {} }
+]
+
+
+
+
+# 4
+# /home/{YOUR USER}/.config/pipewire/client.conf
+
+
+context.properties = {
+    log.level = 0
+}
+
+context.spa-libs = {
+    audio.convert.* = audioconvert/libspa-audioconvert
+    api.alsa.*      = alsa/libspa-alsa
+    support.*       = support/libspa-support
+}
+
+context.modules = [
+    { name = libpipewire-module-protocol-native }
+    { name = libpipewire-module-client-node }
+    { name = libpipewire-module-client-device }
+    { name = libpipewire-module-adapter }
+    { name = libpipewire-module-metadata }
+    { name = libpipewire-module-session-manager }
+]
+
+stream.properties = {
+	audio.format            = "S32LE" 
+	audio.rate              = 48000
+    node.latency            = 512/48000
+    resample.quality        = 10
+	dither.method           = "shibata"
+    dither.noise            = 2
+    channelmix.normalize    = false
+    channelmix.mix-lfe      = true
+    channelmix.upmix        = false
+    channelmix.upmix-method = psd
+}
+
+
+
+
+# 5
+# /home/{YOUR USER}/.config/pipewire/client-rt.conf
+
+
+context.properties = {
+    log.level                   = 0
+    default.clock.rate          = 48000
+	default.clock.allowed-rates = [ 44100 48000 ]
+    default.clock.quantum       = 512
+    default.clock.min-quantum   = 512
+    default.clock.max-quantum   = 1024
+    default.clock.quantum-limit = 8192
+}
+
+context.spa-libs = {
+    audio.convert.* = audioconvert/libspa-audioconvert
+    api.alsa.*      = alsa/libspa-alsa
+    support.*       = support/libspa-support
+}
+
+context.modules = [
+    { name  = libpipewire-module-rt
+      args  = { rt.prio = 50 nice.level = -1 }
+      flags = [ ifexists nofail ]
+    }
+    { name  = libpipewire-module-protocol-native }
+    { name  = libpipewire-module-client-node }
+    { name  = libpipewire-module-client-device }
+    { name  = libpipewire-module-adapter }
+    { name  = libpipewire-module-metadata }
+    { name  = libpipewire-module-session-manager }
+]
+
+context.objects = [
+    { factory = spa-device-factory
+      args    = { factory.name = api.alsa.enum.udev }
+    }
+]
+
+stream.properties = {
+    node.latency            = 512/48000
+    resample.quality        = 10
+	dither.method           = "shibata"
+    dither.noise            = 2
+    channelmix.normalize    = false
+    channelmix.mix-lfe      = true
+    channelmix.upmix        = false
+    channelmix.upmix-method = psd
+    audio.format            = "S32LE"
+    audio.rate              = 48000
+}
+
+alsa.properties = {
+    alsa.access        = [ MMAP_INTERLEAVED MMAP_NONINTERLEAVED RW_INTERLEAVED RW_NONINTERLEAVED ]
+    alsa.format        = [ FLOAT S32 ]
+    alsa.rate          = { min=44100 max=48000 }
+    alsa.channels      = { min=2 max=2 }
+    alsa.period-bytes  = { min=1024 max=65536 }
+    alsa.buffer-bytes  = { min=8192 max=131072 }
+    alsa.volume-method = "physical"
+}
+
+
+
+
+# 6
+# /home/{YOUR USER}/.config/pipewire/jack.conf
+
+
+context.properties = {
+    log.level = 0
+}
+
+context.spa-libs = {
+    audio.convert.* = audioconvert/libspa-audioconvert
+    support.*       = support/libspa-support
+}
+
+context.modules = [
+    { name = libpipewire-module-rt args = { rt.prio = 50 nice.level = -1 } flags = [ ifexists nofail ] }
+    { name = libpipewire-module-protocol-native }
+    { name = libpipewire-module-client-node }
+    { name = libpipewire-module-metadata }
+]
+
+jack.properties = {
+    node.latency           = 512/48000
+    node.rate              = 48000
+    node.quantum           = 512
+    node.lock-quantum      = true
+    jack.self-connect-mode = allow
+    jack.merge-monitor     = false
+    resample.quality       = 10
+}
+
+
+
+
+# 7
+
+
+systemctl --user restart pipewire.service pipewire-pulse.service wireplumber.service
+```
+
+
+<br><br>
+
+
+## PULSE
+
+```bash
+
+```
+
+
+<br><br>
+
+
+## JOURNALD
 
 ```bash
 # 1
