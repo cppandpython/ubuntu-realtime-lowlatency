@@ -128,10 +128,20 @@
 <br><br>
 
 
-## BAT CONSERVATION MODE
+## BAT 
 
 ```bash
 # 1
+# Change battery mode
+
+
+Fn + Q
+
+
+
+
+# 2
+# CONSERVATION MODE
 
 
 sudo sh -c 'echo 1 > /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode'
