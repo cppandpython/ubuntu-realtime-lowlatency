@@ -1578,6 +1578,14 @@ log-target = null
 <br><br>
 
 
+# EASYEFFECTS
+
+[EASYEFFECTS](https://github.com/cppandpython/easyeffects)
+
+
+<br><br>
+
+
 # DXVK
 
 ```bash
