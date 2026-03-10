@@ -369,7 +369,7 @@ sudo update-initramfs -u -k all
 <br>
 
 
-## GNOME
+## I USE GNOME ON WAYLAND AND GDM3 
 
 ```bash
 # --- 1. Rendering & Efficiency ---
