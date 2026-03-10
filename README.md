@@ -1,6 +1,6 @@
 # 🌟 ubuntu-realtime-lowlatency
 
-# доделываю
+
 
 
 <br><br>
@@ -14,6 +14,8 @@
 
 
 <br><br>
+
+
 
 
 ## VS CODE
@@ -1997,7 +1999,107 @@ logfile                 = /dev/null
 ## PACKAGES
 
 ```bash
+# 1
+# --- SYSTEM ARCHITECTURE & FLATPAK SETTINGS ---
 
+
+# Enable 32-bit support (Essential for Wine/Steam) and setup Flatpak
+sudo dpkg --add-architecture i386
+sudo apt update
+
+
+# Install Flatpak and GNOME Software integration
+sudo apt install -y flatpak gnome-software-plugin-flatpak gnome-software
+
+# Add Flathub repository and Flatseal (GUI for managing Flatpak permissions)
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install -y flathub com.github.tchx84.Flatseal
+
+
+
+
+# 2
+# --- PERFORMANCE & KERNEL TOOLS ---
+
+
+# Low-latency kernels, thermal management, and power optimization
+sudo apt install -y \
+    fwupd linux-lowlatency linux-headers-lowlatency \
+    rtirq-init tuned tuned-utils thermald auto-cpufreq \
+    zram-tools tlp tlp-rdw
+
+
+
+
+# 3
+# --- GRAPHICS & MESA DRIVERS ---
+
+
+# Vulkan drivers, hardware acceleration (VA-API/VDPAU), and visual enhancers
+sudo apt install -y \
+    mesa-vulkan-drivers mesa-vulkan-drivers:i386 \
+    mesa-va-drivers mesa-vdpau-drivers mesa-utils \
+    vulkan-tools vkbasalt libvulkan1 libvulkan1:i386 \
+    libvulkan-dev libvulkan-dev:i386 libvdpau-va-gl1 libva2 libvdpau1
+
+
+
+
+# 4
+# --- DEVELOPMENT ENVIRONMENT ---
+
+
+# Compilers, build systems, and Python environment
+sudo apt install -y \
+    build-essential meson ninja-build pkg-config make cmake \
+    python3 python3-pip python3-venv python3-dev python3-tk \
+    libglib2.0-dev libudev-dev libssl-dev libcap-dev libavif-dev libpixman-1-dev
+
+
+
+
+# 5
+# --- MULTIMEDIA & AUDIO DEV ---
+
+
+# PipeWire, ALSA, and PulseAudio development headers for low-latency audio
+sudo apt install -y \
+    libpipewire-0.3-dev libspa-0.2-dev libpulse-dev \
+    libjack-jackd2-dev libsndfile1-dev libasound2-dev \
+    libasound2-plugins:i386 pulseaudio-utils ffmpeg vlc
+
+
+
+
+# 6
+# --- GAMING & WINE COMPATIBILITY ---
+
+
+# Comprehensive 32-bit and 64-bit libraries for running Windows apps/games
+sudo apt install -y \
+    wine wine64 wine32 winetricks \
+    lib32gcc-s1 lib32stdc++6 libc6:i386 lib32z1 lib32ncurses6 lib32tinfo6 \
+    libbz2-1.0:i386 libssl3:i386 libsdl2-dev libsdl2-2.0-0:i386 libudev1:i386 \
+    libgl1:i386 libglx-mesa0:i386 libx11-dev libx11-6:i386 \
+    libxext6:i386 libxrandr2:i386 libxss1:i386 libxcursor1:i386 \
+    libfontconfig1:i386 libfreetype6:i386 libjack-jackd2-0 libjack-jackd2-0:i386 \
+    libv4l-0:i386 libgtk2.0-0:i386 libxcomposite-dev libxdamage-dev \
+    libxfixes-dev libxrandr-dev libxcursor-dev libxrender-dev \
+    libxxf86vm-dev libxtst-dev libxres-dev libxmu-dev \
+    libwayland-dev libdrm-dev
+
+
+
+
+# 7
+# --- SYSTEM UTILITIES & GUI ---
+
+
+# Tools for system monitoring, cleaning, and UI customization
+sudo apt install -y \
+    inxi htop git curl zip unzip p7zip-full tar xvfb \
+    gnome-shell-extension-manager gnome-tweaks gnome-screenshot gnome-color-manager \
+    ufw stacer synaptic
 ```
 
 
