@@ -813,6 +813,121 @@ gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 <br><br>
 
 
+## APT
+
+```bash
+# 1
+# /etc/apt/apt.conf.d/99-optimized
+
+
+APT::Get::Assume-Yes "false";
+APT::Get::Quiet "true";
+
+
+APT::Acquire::Retries "3";
+Acquire::By-Hash "yes";
+Acquire::Check-Valid-Until "true";
+
+
+Dir::Cache::archives "/var/cache/apt/archives";
+Dir::Cache::pkgcache "/var/cache/apt/pkgcache.bin";
+Dir::Cache::srcpkgcache "/var/cache/apt/srcpkgcache.bin";
+
+
+APT::Install-Recommends "true";
+APT::Install-Suggests "false";
+
+
+DPKg::Options {
+    "--force-confdef";
+    "--force-confold"; 
+}
+
+
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Download-Upgradeable-Packages "0"; 
+APT::Periodic::AutocleanInterval "1";           
+APT::Periodic::Unattended-Upgrade "0";
+APT::Periodic::Verbose "0";
+
+
+Dir::Log "/dev/null";
+Dir::Log::Terminal "/dev/null";
+```
+
+
+<br><br>
+
+
+## THERMAL
+
+```bash
+# 1
+
+
+sudo apt update && sudo apt install thermald
+
+sudo systemctl enable --now thermald
+
+
+
+
+# 2
+# /etc/thermald/thermal-conf.xml
+
+
+<?xml version="1.0"?>
+<ThermalConfiguration>
+    <Platform>
+        <Name>Universal_PC_Laptop</Name>
+        <ProductName>Universal_HighPerformance</ProductName>
+        <ThermalZones>
+            <ThermalZone>
+                <Name>CPU Thermal Zone</Name>
+                <TripPoints>
+                    <TripPoint>
+                        <Type>passive</Type>
+                        <Temperature>85</Temperature>
+                        <Control>throttle</Control>
+                    </TripPoint>
+                    <TripPoint>
+                        <Type>passive</Type>
+                        <Temperature>95</Temperature>
+                        <Control>throttle</Control>
+                    </TripPoint>
+                    <TripPoint>
+                        <Type>critical</Type>
+                        <Temperature>105</Temperature>
+                        <Control>shutdown</Control>
+                    </TripPoint>
+                </TripPoints>
+            </ThermalZone>
+        </ThermalZones>
+    </Platform>
+
+    <ThermalSettings>
+        <AC>
+            <CPU_Governor>performance</CPU_Governor>
+            <GPU_Governor>performance</GPU_Governor>
+            <FanProfile>aggressive</FanProfile>
+            <Max_CPU_Power>100</Max_CPU_Power>
+            <Max_GPU_Power>100</Max_GPU_Power>
+        </AC>
+        <BAT>
+            <CPU_Governor>powersave</CPU_Governor>
+            <GPU_Governor>powersave</GPU_Governor>
+            <FanProfile>balanced</FanProfile>
+            <Max_CPU_Power>45</Max_CPU_Power>
+            <Max_GPU_Power>40</Max_GPU_Power>
+        </BAT>
+    </ThermalSettings>
+</ThermalConfiguration>
+```
+
+
+<br><br>
+
+
 ## PACKAGES
 
 ```bash
