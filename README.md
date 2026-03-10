@@ -3,7 +3,7 @@
 
 <br>
 
-## I USE THIS CONFIGURATION ON MY COMPUTER
+## I USE THIS CONFIGURATION ON MY LAPTOP (LOQ-15IAX9)
 
 <br><br>
 
@@ -162,6 +162,7 @@ sudo update-grub
 ```bash
 # 1
 # Place in /etc/fstab
+
 
 # <file system>                            <mount point>    <type>  <options>                                                   <dump>  <pass>
 
@@ -456,6 +457,8 @@ gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 
 
 <br>
+
+
 
 
 
