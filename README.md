@@ -1316,7 +1316,7 @@ alsa.properties = {
     alsa.format        = [ "S32LE" "F32LE" ]
     alsa.rate          = { min=48000 max=48000 }
     alsa.channels      = { min=2 max=2 }
-    alsa.period-bytes  = { min=1024 max=65536 }
+    alsa.period-bytes  = { min=2048 max=65536 }
     alsa.buffer-bytes  = { min=8192 max=131072 }
     alsa.volume-method = "physical"
 }
