@@ -1207,7 +1207,7 @@ sudo systemctl restart NetworkManager
 # 1
 
 
-sudo update && sudo apt install pipewire
+sudo update && sudo apt install pipewire pipewire-pulse pipewire-audio-client-libraries wireplumber libspa-0.2-bluetooth
 
 
 
@@ -1707,6 +1707,179 @@ enabled = false
 
 
 Download LUTs from the Internet
+```
+
+
+<br><br>
+
+
+## USBGUARD
+
+```bash
+# 1
+
+
+sudo apt update && sudo apt install usbguard
+
+sudo systemctl enable --now usbguard
+
+sudo usbguard generate-policy | sudo tee /etc/usbguard/rules.conf
+
+
+
+
+# 2
+# /etc/usbguard/usbguard-daemon.conf
+
+
+RuleFile=/etc/usbguard/rules.conf
+RuleFolder=/etc/usbguard/rules.d/
+
+
+ImplicitPolicyTarget=block
+
+
+PresentDevicePolicy=apply-policy
+
+
+PresentControllerPolicy=keep
+
+
+InsertedDevicePolicy=apply-policy
+
+
+AuthorizedDefault=none
+
+
+RestoreControllerDeviceState=false
+
+
+HidePII=true
+
+
+IPCAllowedUsers=root
+IPCAllowedGroups=root 
+IPCAccessControlFiles=/etc/usbguard/IPCAccessControl.d/
+
+
+DeviceRulesWithPort=false
+DeviceManagerBackend=uevent
+
+
+AuditBackend=FileAudit
+AuditFilePath=/dev/null
+
+
+
+
+# 3
+
+
+sudo systemctl restart usbguard
+```
+
+
+<br><br>
+
+
+# CLAMAV
+
+```bash
+# 1
+
+
+sudo apt update && sudo apt install clamav clamav-daemon 
+
+
+
+
+# 2
+# /etc/clamav/clamd.conf
+
+
+LocalSocket /var/run/clamav/clamd.ctl
+FixStaleSocket true
+LocalSocketGroup clamav
+LocalSocketMode 660
+User clamav
+
+
+OnAccessIncludePath /home/{YOUR USER}
+OnAccessExcludeUname clamav
+OnAccessPrevention true
+OnAccessMaxFileSize 300M
+
+
+MaxThreads 4
+MaxConnectionQueueLength 15
+ReadTimeout 180
+SelfCheck 3600
+ExitOnOOM false
+ForceToDisk false
+
+
+ScanELF true
+ScanPE true
+ScanPDF true
+ScanHTML true
+ScanXMLDOCS true
+ScanSWF true
+DetectPUA true
+AlgorithmicDetection true
+
+
+MaxScanSize 500M
+MaxFileSize 100M
+StreamMaxLength 30M
+MaxRecursion 10
+MaxFiles 5000
+
+
+LogSyslog false
+LogVerbose false
+LogRotate false
+LogTime false
+LogClean false
+Debug false
+
+
+DatabaseDirectory /var/lib/clamav
+OfficialDatabaseOnly true
+Bytecode true
+BytecodeSecurity TrustSigned
+
+
+
+
+# 3
+# /etc/clamav/freshclam.conf
+
+
+DatabaseOwner clamav
+DatabaseDirectory /var/lib/clamav
+
+
+LogVerbose false
+LogSyslog false
+LogTime false
+LogFileMaxSize 0
+
+
+Checks 6
+DatabaseMirror database.clamav.net
+MaxAttempts 5
+ScriptedUpdates yes
+CompressLocalDatabase yes
+Bytecode true
+
+
+ConnectTimeout 30
+ReceiveTimeout 60
+
+
+NotifyClamd /etc/clamav/clamd.conf
+Foreground false
+Debug false
 ```
 
 
