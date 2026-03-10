@@ -241,6 +241,22 @@ tmpfs                                      /var/backups     tmpfs   defaults,noa
 <br><br>
 
 
+## FSTRIM
+
+```bash
+# 1
+/etc/systemd/system/fstrim.timer.d/override.conf
+
+
+[Timer]
+OnCalendar=
+OnCalendar=daily
+```
+
+
+<br><br>
+
+
 ## MODPROBE
 
 ```bash
