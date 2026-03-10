@@ -1,7 +1,9 @@
 # 🌟 ubuntu-realtime-lowlatency
+
 # доделываю
 
-<br>
+
+<br><br>
 
 ## I USE THIS CONFIGURATION ON MY LAPTOP (LOQ-15IAX9)
 
@@ -31,18 +33,18 @@ echo "deb [signed-by=/etc/apt/keyrings/xanmod-archive-keyring.gpg] http://deb.xa
 # 3
 
 
-sudo apt install linux-xanmod-lts-x64v3
+sudo apt update && sudo apt install linux-xanmod-lts-x64v3
 ```
 
 
-<br>
+<br><br>
 
 
 ## SYSCTL
 
 ```bash
 # 1
-# Create file /etc/sysctl.d/realtime-lowlatency.conf
+# /etc/sysctl.d/realtime-lowlatency.conf
 
 
 # --- CPU & Scheduler ---
@@ -129,14 +131,14 @@ sudo sysctl --system
 ```
 
 
-<br>
+<br><br>
 
 
 ## GRUB
 
 ```bash
 # 1
-# Place in file /etc/default/grub
+# /etc/default/grub
 
 
 GRUB_DEFAULT=0
@@ -154,14 +156,63 @@ sudo update-grub
 ```
 
 
-<br>
+<br><br>
+
+
+## RTIRQ
+
+```bash
+# 1
+
+
+sudo apt update && sudo apt install rtirq-init
+
+
+
+
+# 2
+# /etc/default/rtirq
+
+
+# --- Priority List ---
+RTIRQ_NAME_LIST="usb hid nvme snd"
+RTIRQ_HIGH_LIST="usb hid nvme"
+
+
+# --- Priority Settings ---
+RTIRQ_PRIO_HIGH=70
+RTIRQ_PRIO_DECR=2
+RTIRQ_PRIO_LOW=50
+RTIRQ_RESET_ALL=0
+RTIRQ_SCHED="fifo"
+
+RTIRQ_SPREAD=1
+
+# --- CPU Affinity ---
+RTIRQ_CPUS="2-3"
+IRQBALANCE_BANNED_CPUS="00000000-00000000-00000000-0000000c" # Маска для ядер 2-3
+
+
+# --- Real-Time Clocks ---
+RTIRQ_NON_THREADED="rtc0"
+
+
+# --- Stealth & Performance ---
+RTIRQ_DELAY=5
+RTIRQ_CHECK_INTERVAL=3
+RTIRQ_DEBUG=0
+RTIRQ_VERBOSE=0
+```
+
+
+<br><br>
 
 
 ## FSTAB 
 
 ```bash
 # 1
-# Place in /etc/fstab
+# /etc/fstab
 
 
 # <file system>                            <mount point>    <type>  <options>                                                   <dump>  <pass>
@@ -187,14 +238,14 @@ tmpfs                                      /var/backups     tmpfs   defaults,noa
 ```
 
 
-<br>
+<br><br>
 
 
 ## MODPROBE
 
 ```bash
 # 1
-# Create file /etc/modprobe.d/blacklist-optimized.conf
+# /etc/modprobe.d/blacklist-optimized.conf
 
 
 # --- Graphics & Framebuffers ---
@@ -312,7 +363,7 @@ blacklist amd76x_edac
 
 
 # 2
-# Create file /etc/modprobe.d/nvidia.conf 
+# /etc/modprobe.d/nvidia.conf 
 
 # --- Video Memory & Latency Optimizations ---
 # Ensure video memory is preserved across suspend/resume cycles
@@ -376,7 +427,7 @@ options nvidia NVreg_DeviceFileMode=0660
 
 
 # 3
-# Create file /etc/modprobe.d/usbhid.conf
+# /etc/modprobe.d/usbhid.conf
 
 # --- USB HID Latency Optimizations ---
 
@@ -400,14 +451,14 @@ sudo update-initramfs -u -k all
 ```
 
 
-<br>
+<br><br>
 
 
 ## ENVIRONMENT
 
 ```bash
 # 1
-# Place in /etc/environment
+# /etc/environment
 
 
 # --- System Paths ---
@@ -488,7 +539,7 @@ DXVK_STATE_CACHE=1
 DXVK_SHADER_DISK_CACHE_PATH="/home/{YOUR USER}/.dxvk-cache"
 VDPAU_LOG_LEVEL=0
 LIBVA_MESSAGING_LEVEL=0
-CUDA_CACHE_PATH="/home/vladislav_khudash/.cuda-cache"
+CUDA_CACHE_PATH="/home/{YOUR USER}/.cuda-cache"
 CUDA_LAUNCH_BLOCKING=0
 
 
@@ -540,7 +591,7 @@ STEAM_DEBUG=0
 ```
 
 
-<br>
+<br><br>
 
 
 ## I USE GNOME ON WAYLAND AND GDM3 
@@ -596,11 +647,16 @@ gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 ```
 
 
-<br>
+<br><br>
 
 
+## 
+
+```bash
+
+```
 
 
-
+<br><br>
 
 
