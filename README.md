@@ -5,6 +5,7 @@
 
 <br><br>
 
+## BY Vladislav Khudash FROM UKRAINE 🇺🇦
 ## I USE THIS CONFIGURATION ON MY LAPTOP (LOQ-15IAX9)
 
 <br><br>
