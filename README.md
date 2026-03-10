@@ -272,55 +272,6 @@ sudo update-grub
 <br><br>
 
 
-## RTIRQ
-
-```bash
-# 1
-
-
-sudo apt update && sudo apt install rtirq-init
-
-
-
-
-# 2
-# /etc/default/rtirq
-
-
-# --- Priority List ---
-RTIRQ_NAME_LIST="usb hid nvme snd"
-RTIRQ_HIGH_LIST="usb hid nvme"
-
-
-# --- Priority Settings ---
-RTIRQ_PRIO_HIGH=70
-RTIRQ_PRIO_DECR=2
-RTIRQ_PRIO_LOW=50
-RTIRQ_RESET_ALL=0
-RTIRQ_SCHED="fifo"
-
-RTIRQ_SPREAD=1
-
-# --- CPU Affinity ---
-RTIRQ_CPUS="2-3"
-IRQBALANCE_BANNED_CPUS="00000000-00000000-00000000-0000000c" # Маска для ядер 2-3
-
-
-# --- Real-Time Clocks ---
-RTIRQ_NON_THREADED="rtc0"
-
-
-# --- Stealth & Performance ---
-RTIRQ_DELAY=5
-RTIRQ_CHECK_INTERVAL=3
-RTIRQ_DEBUG=0
-RTIRQ_VERBOSE=0
-```
-
-
-<br><br>
-
-
 ## FSTAB 
 
 ```bash
@@ -859,6 +810,55 @@ Dir::Log::Terminal "/dev/null";
 <br><br>
 
 
+## RTIRQ
+
+```bash
+# 1
+
+
+sudo apt update && sudo apt install rtirq-init
+
+
+
+
+# 2
+# /etc/default/rtirq
+
+
+# --- Priority List ---
+RTIRQ_NAME_LIST="usb hid nvme snd"
+RTIRQ_HIGH_LIST="usb hid nvme"
+
+
+# --- Priority Settings ---
+RTIRQ_PRIO_HIGH=70
+RTIRQ_PRIO_DECR=2
+RTIRQ_PRIO_LOW=50
+RTIRQ_RESET_ALL=0
+RTIRQ_SCHED="fifo"
+
+RTIRQ_SPREAD=1
+
+# --- CPU Affinity ---
+RTIRQ_CPUS="2-3"
+IRQBALANCE_BANNED_CPUS="00000000-00000000-00000000-0000000c" # Маска для ядер 2-3
+
+
+# --- Real-Time Clocks ---
+RTIRQ_NON_THREADED="rtc0"
+
+
+# --- Stealth & Performance ---
+RTIRQ_DELAY=5
+RTIRQ_CHECK_INTERVAL=3
+RTIRQ_DEBUG=0
+RTIRQ_VERBOSE=0
+```
+
+
+<br><br>
+
+
 ## THERMAL
 
 ```bash
@@ -922,6 +922,167 @@ sudo systemctl enable --now thermald
         </BAT>
     </ThermalSettings>
 </ThermalConfiguration>
+```
+
+
+<br><br>
+
+
+## TLP
+
+```bash
+# 1
+
+
+sudo apt update && sudo apt install tlp tlp-rdw
+
+sudo systemctl enable --now tlp
+
+
+
+
+# 2
+# /etc/tlp.conf
+
+
+# ------------------------------------------------------------------------------
+# TLP Configuration - Optimized for LOQ Low-Latency & Battery Life
+# ------------------------------------------------------------------------------
+
+
+TLP_ENABLE                          = 1
+TLP_DEFAULT_MODE                    = AC
+TLP_PERSISTENT_DEFAULT              = 0
+
+
+# --- CPU Management ---
+CPU_SCALING_GOVERNOR_ON_AC          = performance
+CPU_SCALING_GOVERNOR_ON_BAT         = powersave
+
+CPU_SCALING_MIN_FREQ_ON_AC          = 0
+CPU_SCALING_MAX_FREQ_ON_AC          = 0
+CPU_SCALING_MIN_FREQ_ON_BAT         = 800000
+CPU_SCALING_MAX_FREQ_ON_BAT         = 0
+
+CPU_BOOST_ON_AC                     = 1
+CPU_BOOST_ON_BAT                    = 0
+
+CPU_ENERGY_PERF_POLICY_ON_AC        = performance
+CPU_ENERGY_PERF_POLICY_ON_BAT       = balance_power
+CPU_HWP_ON_AC                       = performance
+CPU_HWP_ON_BAT                       = balance_power
+
+CPU_MAX_PERF_ON_BAT                 = 30
+
+
+# --- GPU Management (NVIDIA/Radeon) ---
+NVIDIA_DYNAMIC_POWERMGMT_ON_AC      = 0
+NVIDIA_DYNAMIC_POWERMGMT_ON_BAT      = 1
+NVIDIA_PM_ON_AC                     = performance
+NVIDIA_PM_ON_BAT                    = auto
+
+
+# --- Storage & PCIe ---
+NVME_POWERMGMT_ON_AC                = 0
+NVME_POWERMGMT_ON_BAT               = 1
+PCIE_ASPM_ON_AC                     = performance
+PCIE_ASPM_ON_BAT                    = powersave
+
+
+# --- Connectivity & USB ---
+DEVICES_TO_DISABLE_ON_STARTUP       = "bluetooth"
+DEVICES_TO_DISABLE_ON_BAT           = "bluetooth"
+
+USB_AUTOSUSPEND                     = 0
+USB_AUTOSUSPEND_DISABLE_ON_SHUTDOWN = 1
+
+
+# --- Battery Care ---
+BATT_CONSERVATION_MODE              = 1
+RESTORE_THRESHOLDS_ON_AC            = 1
+
+
+# --- Platform & Sound ---
+SOUND_POWER_SAVE_ON_AC              = 0
+SOUND_POWER_SAVE_ON_BAT             = 1
+SOUND_POWER_SAVE_TIMEOUT            = 60
+
+PLATFORM_PROFILE_ON_AC              = performance
+PLATFORM_PROFILE_ON_BAT             = balanced
+```
+
+
+<br><br>
+
+
+##
+
+```bash
+# 1
+
+sudo apt update && sudo apt install zram-tools
+
+sudo systemctl enable --now zramswap
+
+
+
+
+# 2
+# /etc/default/zramswap
+
+
+ENABLED=true
+PERCENTAGE=50
+ALGO=zstd
+BLOCKSIZE=512K
+AUTOSTART=true
+LOGGING=false
+PRIORITY=100
+MAX_DEVICES=1
+COMP_STREAMS=6
+MEM_LIMIT=0
+WRITEBACK_THRESHOLD=0
+```
+
+
+<br><br>
+
+
+## PRELOAD
+
+```bash
+# 1
+
+
+sudo apt update && sudo apt install preload 
+
+sudo systemctl enable --now preload
+
+
+
+
+# 2
+# /etc/preload.conf
+
+
+[model]
+cycle = 40
+usecorrelation = true
+minsize = 2000000
+memtotal = 10
+memfree = 40
+memcached = 15
+
+
+[system]
+doscan = true
+dopredict = true
+autosave = 3600
+mapprefix = /usr/;/lib/;/var/cache/;!/dev
+exeprefix = !/usr/sbin/;!/usr/local/sbin/;/usr/bin/;/usr/local/bin/
+processes = 15
+sortstrategy = 0
+debug = false
 ```
 
 
