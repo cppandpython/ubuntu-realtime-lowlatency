@@ -157,6 +157,35 @@ sudo update-grub
 <br>
 
 
+## FSTAB 
+
+```bash
+# 1
+# Place in /etc/fstab
+
+# <file system>                            <mount point>    <type>  <options>                                                   <dump>  <pass>
+
+
+# EFI System Partition
+/dev/disk/by-uuid/{YOUR UUID}              /boot/efi        vfat    defaults                                                     0       1
+
+
+# Root Partition (SSD Optimized)
+UUID={YOUR UUID}                           /                ext4    defaults,noatime,nodiratime,commit=30,errors=remount-ro      0       1
+
+
+# Swap File (Low priority to keep it as a last resort)
+/swapfile                                  none             swap    sw,pri=1                                                     0       0
+
+
+# Memory Resident File Systems (Fast & Stealthy)
+tmpfs                                      /tmp             tmpfs   defaults,noatime,mode=1777,size=10G,nosuid,nodev             0       0
+tmpfs                                      /var/log         tmpfs   defaults,noatime,mode=0755,size=256M,nosuid,nodev            0       0
+tmpfs                                      /var/tmp         tmpfs   defaults,noatime,mode=1777,size=1G,nosuid,nodev              0       0
+tmpfs                                      /var/backups     tmpfs   defaults,noatime,mode=0755,size=256M,nosuid,nodev            0       0
+```
+
+
 <br>
 
 
@@ -427,6 +456,8 @@ gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 
 
 <br>
+
+
 
 
 
