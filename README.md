@@ -5,7 +5,10 @@
 
 <br><br>
 
-## BY (Vladislav Khudash) FROM (UKRAINE 🇺🇦)
+## BY (Vladislav Khudash) AGE (17) FROM (UKRAINE 🇺🇦) 
+
+<br>
+
 ## I USE THIS CONFIGURATION ON MY LAPTOP (LOQ-15IAX9)
 
 <br><br>
