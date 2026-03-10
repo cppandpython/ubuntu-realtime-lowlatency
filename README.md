@@ -1,4 +1,4 @@
-# ubuntu-realtime-lowlatency
+# 🌟 ubuntu-realtime-lowlatency
 
 
 My Ubuntu configuration
