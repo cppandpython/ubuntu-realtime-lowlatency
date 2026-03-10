@@ -126,6 +126,19 @@
 <br><br>
 
 
+## BAT
+
+```bash
+# 1
+
+
+sh -c 'echo 1 > /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode'
+```
+
+
+<br><br>
+
+
 ## LINUX KERNEL
 
 ```bash
@@ -150,6 +163,27 @@ echo "deb [signed-by=/etc/apt/keyrings/xanmod-archive-keyring.gpg] http://deb.xa
 
 
 sudo apt update && sudo apt install linux-xanmod-lts-x64v3
+```
+
+
+<br><br>
+
+
+## CPU
+
+```bash
+# 1
+
+
+sudo sh -c 'echo performance > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor'
+
+
+
+
+# 2
+
+
+sudo sh -c 'echo performance > /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference'
 ```
 
 
