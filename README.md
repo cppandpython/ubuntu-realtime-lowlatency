@@ -583,6 +583,40 @@ sudo update-initramfs -u -k all
 <br><br>
 
 
+## X11
+
+```bash
+# 1
+# /etc/X11/xorg.conf.d/10-nvidia.conf
+
+
+Section "Device"
+    Identifier "Nvidia Card"
+    VendorName "NVIDIA Corporation"
+    Option "NoLogo" "1"
+    Option "Coolbits" "31"
+    Option "TripleBuffer" "true"
+    Option "AllowEmptyInitialConfiguration" "true"
+    Option "HWCursor" "true"
+EndSection
+
+
+Section "Screen"
+    Identifier "Screen0"
+    Device "Nvidia Card"
+    Option "metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=Off, ForceFullCompositionPipeline=Off}"
+    Option "AllowIndirectGLXProtocol" "off"
+EndSection
+
+
+Section "Extensions"
+    Option "Composite" "Enable"
+EndSection
+```
+
+<br><br>
+
+
 ## ENVIRONMENT
 
 ```bash
