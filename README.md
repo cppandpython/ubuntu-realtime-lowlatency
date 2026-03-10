@@ -372,5 +372,51 @@ sudo update-initramfs -u -k all
 ## GNOME
 
 ```bash
+# --- 1. Rendering & Efficiency ---
+# Triple buffering for smoothness, VRR to save power on static images, and Unredirect for full-screen performance
+gsettings set org.gnome.mutter experimental-features "['triple-buffering', 'variable-refresh-rate', 'unredirect-fullscreen-windows']"
 
+
+# --- 2. Power Management (Battery Life Optimization) ---
+# Automatically trigger power-saver profile when battery is low
+gsettings set org.gnome.settings-daemon.plugins.power power-saver-profile-on-low-battery true
+
+# On Battery: Set screen dimming/blanking and suspend after 15 minutes (900 seconds)
+gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-timeout 900
+gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'suspend'
+
+# On AC Power: Never automatically suspend
+gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+
+
+# --- 3. Interface & UI (Reducing Resource Usage) ---
+# Disable animations to save CPU/GPU cycles (crucial for battery and responsiveness)
+gsettings set org.gnome.desktop.interface enable-animations false
+
+# Disable window snapping, dynamic workspaces, and hot corners to keep the environment lean
+gsettings set org.gnome.mutter edge-tiling false
+gsettings set org.gnome.mutter dynamic-workspaces false
+gsettings set org.gnome.desktop.interface enable-hot-corners false
+
+
+# --- 4. Background Processes (Reducing CPU Wakeups) ---
+# Disable external search providers and indexing (major battery drainers)
+gsettings set org.gnome.desktop.search-providers disable-external true
+gsettings set org.gnome.desktop.search-providers disabled "['org.gnome.Contacts.desktop', 'org.gnome.Documents.desktop', 'org.gnome.Nautilus.desktop']"
+
+# Stop automatic update downloads to save Wi-Fi power and background CPU usage
+gsettings set org.gnome.software download-updates false
+
+# Disable technical problem reporting (whoopsie/telemetry) to minimize background noise
+gsettings set org.gnome.desktop.privacy report-technical-problems false
+
+
+# --- 5. Peripherals & Accessibility ---
+# Mouse: Flat acceleration profile for raw, predictable input
+gsettings set org.gnome.desktop.peripherals.mouse accel-profile 'flat'
+gsettings set org.gnome.desktop.peripherals.mouse speed 0
+
+# Keyboard: Faster typing response with reduced delay and high repeat rate
+gsettings set org.gnome.desktop.peripherals.keyboard delay 300
+gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
 ```
