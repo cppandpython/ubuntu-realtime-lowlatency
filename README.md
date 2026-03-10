@@ -1234,18 +1234,21 @@ context.properties = {
 
 context.spa-libs = {
     audio.convert.* = audioconvert/libspa-audioconvert
-    avb.*           = avb/libspa-avb
-    api.alsa.*      = alsa/libspa-alsa
-    api.v4l2.*      = v4l2/libspa-v4l2
+    avb.* = avb/libspa-avb
+    api.alsa.* = alsa/libspa-alsa
+    api.v4l2.* = v4l2/libspa-v4l2
     api.libcamera.* = libcamera/libspa-libcamera
-    api.bluez5.*    = bluez5/libspa-bluez5
-    api.vulkan.*    = vulkan/libspa-vulkan
-    api.jack.*      = jack/libspa-jack
-    support.*       = support/libspa-support
+    api.bluez5.* = bluez5/libspa-bluez5
+    api.vulkan.* = vulkan/libspa-vulkan
+    api.jack.* = jack/libspa-jack
+    support.* = support/libspa-support
 }
 
 context.modules = [
-    { name = libpipewire-module-rt args = { nice.level = -2 rt.prio = 50 } flags = [ ifexists nofail ] }
+    { name = libpipewire-module-rt 
+      args = { nice.level = -2 rt.prio = 50 } 
+      flags = [ ifexists nofail ] 
+    }
     { name = libpipewire-module-protocol-native }
     { name = libpipewire-module-profiler }
     { name = libpipewire-module-metadata }
@@ -1258,8 +1261,14 @@ context.modules = [
     { name = libpipewire-module-adapter }
     { name = libpipewire-module-link-factory }
     { name = libpipewire-module-session-manager }
-    { name = libpipewire-module-x11-bell flags = [ ifexists nofail ] condition = [ { module.x11.bell = true } ] }
-    { name = libpipewire-module-jackdbus-detect flags = [ ifexists nofail ] condition = [ { module.jackdbus-detect = true } ] }
+    { name = libpipewire-module-x11-bell 
+      flags = [ ifexists nofail ] 
+      condition = [ { module.x11.bell = true } ] 
+    }
+    { name = libpipewire-module-jackdbus-detect 
+      flags = [ ifexists nofail ] 
+      condition = [ { module.jackdbus-detect = true } ] 
+    }
 ]
 
 context.objects = [
@@ -1267,7 +1276,7 @@ context.objects = [
       args = {
           factory.name            = api.alsa.pcm.sink
           node.name               = HighQuality-Sink
-          node.description        = "ALSA Output"
+          node.description        = "ALSA Output (Low-Latency)"
           audio.format            = "S32LE"
           audio.rate              = 48000
           audio.channels          = 2
@@ -1282,7 +1291,7 @@ context.objects = [
       args = {
           factory.name     = api.alsa.pcm.source
           node.name        = HighQuality-Source
-          node.description = "ALSA Input"
+          node.description = "ALSA Input (Low-Latency)"
           audio.format     = "S32LE"
           audio.rate       = 48000
           audio.channels   = 2
@@ -1299,7 +1308,7 @@ alsa.properties = {
     alsa.channels      = { min=2 max=2 }
     alsa.period-bytes  = { min=1024 max=65536 }
     alsa.buffer-bytes  = { min=8192 max=131072 }
-	alsa.volume-method = "physical"
+    alsa.volume-method = "physical"
 }
 
 context.exec = []
@@ -1310,7 +1319,7 @@ pulse.cmd = [
 
 stream.properties = {
     node.latency   = 512/48000
-	dither.method  = "shibata"
+    dither.method  = "shibata"
 }
 
 pulse.properties = {
