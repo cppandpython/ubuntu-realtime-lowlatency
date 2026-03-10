@@ -11,8 +11,10 @@
 sudo mkdir -p /etc/apt/keyrings
 wget -qO - https://dl.xanmod.org/archive.key | sudo gpg --dearmor -vo /etc/apt/keyrings/xanmod-archive-keyring.gpg
 
+
 # 2
 echo "deb [signed-by=/etc/apt/keyrings/xanmod-archive-keyring.gpg] http://deb.xanmod.org $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/xanmod-release.list
+
 
 # 3
 sudo apt install linux-xanmod-lts-x64v3
@@ -102,6 +104,7 @@ net.ipv4.conf.default.rp_filter    = 2
 net.ipv6.conf.all.use_tempaddr     = 2
 net.ipv6.conf.default.use_tempaddr = 2
 
+
 # 2
 sudo sysctl --system
 ```
@@ -123,6 +126,7 @@ GRUB_CMDLINE_LINUX_DEFAULT="lockdown=integrity pti=on vsyscall=none page_poison=
 GRUB_CMDLINE_LINUX=""
 GRUB_TERMINAL=console 
 
+
 # 2
 sudo update-grub
 ```
@@ -138,7 +142,7 @@ sudo update-grub
 
 ```bash
 # 1
-# Create file /etc/modprobe.d/ blacklist-optimized.conf
+# Create file /etc/modprobe.d/blacklist-optimized.conf
 
 # --- Graphics & Framebuffers ---
 # Disable open-source Nouveau to prevent conflicts with proprietary NVIDIA driver
@@ -252,6 +256,87 @@ blacklist blowfish
 blacklist amd76x_edac
 
 
+# 2
+# Create file /etc/modprobe.d/nvidia.conf 
 
+# --- Video Memory & Latency Optimizations ---
+# Ensure video memory is preserved across suspend/resume cycles
+options nvidia NVreg_PreserveVideoMemoryAllocations=1
+
+# Set temporary storage path for video memory data during suspend
+options nvidia NVreg_TemporaryFilePath=/tmp/nvidia
+
+# Use Page Attribute Table (PAT) for better CPU-to-GPU communication performance
+options nvidia NVreg_UsePageAttributeTable=1
+
+# Do not pre-initialize all system memory allocations to save time/resources
+options nvidia NVreg_InitializeSystemMemoryAllocations=0
+
+
+# --- Bus & Interface Settings ---
+# Force PCIe Gen4 speeds (standard for mobile 40-series GPUs)
+options nvidia NVreg_EnablePCIeGen4=1
+
+# Enable Message Signaled Interrupts (MSI) to reduce CPU overhead and latency
+options nvidia NVreg_EnableMSI=1
+
+# Enable Stream Memory Operations for better asynchronous data handling
+options nvidia NVreg_EnableStreamMemOPs=1
+# Skip checking PCI config space for faster initialization
+options nvidia NVreg_CheckPCIConfigSpace=0
+
+# Disable NvLink as it is not present/used on laptop hardware
+options nvidia NVreg_NvLinkDisable=1
+
+
+# --- Power Management (Battery & Performance Balance) ---
+# PowerMizerEnable=0x1: Enable NVIDIA PowerMizer power management
+# GpuPowerMizerMode=0x2: Set to Adaptive mode (downclocks on idle, max on load)
+# EnableBrightnessControl=1: Ensure backlight control works on laptops
+options nvidia NVreg_RegistryDwords="PowerMizerEnable=0x1;EnableBrightnessControl=1;ThermalConfiguration=1;FanControlState=1;GpuPowerMizerMode=0x2;AdaptivePowerMizer=1"
+
+# PersistenceMode=0: Allow the GPU to fully power down when not in use (Crucial for battery)
+options nvidia NVreg_PersistenceMode=0
+
+
+# --- Buffers & Limits ---
+# Set the size of the internal memory pool in MB
+options nvidia NVreg_MemoryPoolSize=256
+
+# Limit for remapping memory to avoid address space fragmentation
+options nvidia NVreg_RemapLimit=64
+
+
+# --- Device Node Permissions ---
+# Root owns the device files
+options nvidia NVreg_DeviceFileUID=0
+
+# Assign device to GID 44 (standard 'video' group in Ubuntu/Debian)
+options nvidia NVreg_DeviceFileGID=44
+
+# Set read/write permissions for owner and group
+options nvidia NVreg_DeviceFileMode=0660
+
+
+# 3
+# Create file /etc/modprobe.d/usbhid.conf
+
+# --- USB HID Latency Optimizations ---
+
+# Set mouse polling rate to 500Hz (2ms interval) for lower input lag
+options usbhid mousepoll=2
+
+# Set joystick/gamepad polling rate to 500Hz
+options usbhid jspoll=2
+
+# Set keyboard polling rate to 500Hz
+options usbhid kbpoll=2
+
+# Increase timeout to 200ms to prevent lag when waking up wireless devices
+options usbhid timeout=200
+
+
+# 4
+sudo update-initramfs -u -k all
 ```
 
