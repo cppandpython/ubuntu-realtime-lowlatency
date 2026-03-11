@@ -1733,6 +1733,21 @@ Download LUTs from the Internet
 <br><br>
 
 
+## USER
+
+```bash
+# Protection when creating a new user
+
+
+sudo chattr +i /etc/passwd
+
+sudo chattr +i /etc/shadow
+```
+
+
+<br><br>
+
+
 ## USBGUARD
 
 ```bash
